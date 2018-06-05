@@ -1,0 +1,83 @@
+- hosts: all
+  become: yes
+  remote_user: root
+  gather_facts: no
+
+  tasks:
+
+  - name: 'Install Java 8'
+    apt:
+      name: openjdk-8-jdk 
+      update_cache: yes
+      # force_apt_get: yes
+
+  - name: 'Install Daemon'
+    apt: 
+      name: daemon 
+      # force_apt_get: yes
+
+  - name: 'Install Git'
+    apt:
+      name: git-core
+  
+
+- hosts: nimbus
+  become: yes
+  remote_user: root
+  gather_facts: no
+   
+  tasks:
+    
+    - name: 'copy storm nimbus configuration file'
+      copy:
+        src: "./{{ nimbus_yaml }}"
+        dest: "{{ storm_conf_dir }}/storm.yaml"
+        # owner: "{{ user }}"
+        # group: users
+        mode: 0644 
+    
+    - name: 'creating zookeeper configuration file'
+      copy:
+        src: "{{ zookeeper_conf_dir }}/zoo_sample.cfg"
+        dest: "{{ zookeeper_conf_dir }}/zoo.cfg"
+        remote_src: yes
+    
+    - name: 'starting zookeeper'
+      command: ./zkServer.sh start
+      args:
+        chdir: "{{ zookeeper_bin_dir }}"
+
+    - name: 'starting nimbus'
+      shell: "daemon {{ storm_bin_dir }}/storm nimbus"
+
+    - name: 'starting ui'
+      shell: "daemon {{ storm_bin_dir }}/storm ui"
+
+    
+  
+
+- hosts: supervisor
+  become: yes
+  remote_user: root
+  gather_facts: no
+
+  tasks:
+
+    - name: 'copy storm supervisor configuratiion file'
+      copy:
+        src: "./{{ supervisor_yaml }}"
+        dest: "{{ storm_conf_dir }}/storm.yaml"
+        # owner: "{{ user }}"
+        # group: users
+        mode: 0644
+
+    - name: 'starting supervisor'
+      shell: "daemon {{ storm_bin_dir }}/storm supervisor"
+
+    - name: 'copying netmonitor to supervisors'
+      copy:
+        src: "./{{ netmonitor_path }}"
+        dest: ./netmonitor
+    
+    - name: 'starting netmonitor'
+      shell: "daemon python3 ./netmonitor/client.py {{ frontend_address }}"
