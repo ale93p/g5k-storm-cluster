@@ -16,7 +16,7 @@ Download the disk image from [here](http://i3s.unice.fr/~pagliari/downloads/g5k-
 ### Reserve resources ###
 
 To reserve nodes in Grid’5000 you just have to run the following command (adapted to your situation):
-```
+```shell
 frontend > oarsub -t deploy -p "cluster='suno'" -I -l nodes=4,walltime=2 -k
 ```
 In this example we are in the Sophia region, we’re requesting _4_ nodes for _2_ hours in the cluster named _”suno”_.
@@ -29,7 +29,7 @@ Open the file `cluster.conf` and modify the parameters to comply your system con
 
 ### Run it ###
 
-```
+```shell
 frontend > python3 deploy.py
 ```
 
