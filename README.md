@@ -7,10 +7,11 @@ This script will deploy a basic Apache Storm Cluster in our reserved nodes in Gr
 * Python 3.x
 * Ansible (tested with version 2.5)
 
-## How to run it ##
+## How to run it ##
 
-First of all we have to clone this repository in the frontend node in Grid’5000. 
-Download the disk image from [here]()
+First of all we have to clone this repository in the frontend node in Grid’5000.
+
+Download the disk image from [here](http://i3s.unice.fr/~pagliari/downloads/g5k-storm-image), then move it inside the repository folder.
 
 ### Reserve resources ###
 
@@ -20,7 +21,7 @@ frontend > oarsub -t deploy -p "cluster='suno'" -I -l nodes=4,walltime=2 -k
 ```
 In this example we are in the Sophia region, we’re requesting _4_ nodes for _2_ hours in the cluster named _”suno”_.
 
-For further and more specific informations follow the Grid’5000’s [Getting Started tutorial](https://www.grid5000.fr/mediawiki/index.php/Getting_Started).
+For further and more specific information follow the Grid’5000’s [Getting Started tutorial](https://www.grid5000.fr/mediawiki/index.php/Getting_Started).
 
 ### Pre-task: customize the config file ###
 
