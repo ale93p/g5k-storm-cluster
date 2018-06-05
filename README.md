@@ -1,4 +1,4 @@
-# Grid’5000 Apache Storm Cluster # 
+# Grid’5000 Apache Storm Cluster 
 
 This script will deploy a basic Apache Storm Cluster in our reserved nodes in Grid’5000. Hope to improve it in the future, any help is welcomed.
 
