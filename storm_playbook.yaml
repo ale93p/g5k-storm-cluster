@@ -73,11 +73,3 @@
 
     - name: 'starting supervisor'
       shell: "daemon {{ storm_bin_dir }}/storm supervisor"
-
-    - name: 'copying netmonitor to supervisors'
-      copy:
-        src: "./{{ netmonitor_path }}"
-        dest: ./netmonitor
-    
-    - name: 'starting netmonitor'
-      shell: "daemon python3 ./netmonitor/client.py {{ frontend_address }}"

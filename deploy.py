@@ -2,7 +2,7 @@
 ### oarsub -t deploy -p "cluster='suno'" -I -l nodes=4,walltime=2 -k
 
 
-import subprocess, argparse
+import subprocess
 from os import environ
 from sys import stdout, stderr
 from configparser import ConfigParser
@@ -21,7 +21,6 @@ deployImg = str(g5kConfig['deploy.image.name'])
 nodeMemory = str(g5kConfig['node.memory.mb'])
 nodeCpus = int(g5kConfig['node.cpu.units'])
 userName = str(g5kConfig['user.name'])
-frontendAddress = str(g5kConfig['frontend.address'])
 
 stormConfig = config['storm']
 zookeperVersion = str(stormConfig['zookeeper.version'])
@@ -37,19 +36,10 @@ ansibleConfig = config['ansible']
 inventoryPath = str(ansibleConfig['inventory.file.path'])
 playbookPath = str(ansibleConfig['playbook.file.path'])
 
-netmonitorConfig = config['netmonitor']
-netmonitorPath = str(netmonitorConfig['netmonitor.path'])
-
 ### Variables ###
 
 nimbusConfYaml = 'storm_nimbus.yaml'
 supervisorConfYaml = 'storm_supervisor.yaml'
-
-### Read Command Line ###
-
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter, description="Deploy Storm in Grid5000 cluster")
-parser.add_argument("git_pwd", nargs=1, type=str, help="git password to retrieve")
-args = parser.parse_args()
 
 ### Obtain cluster's nodes list ###
 
@@ -129,15 +119,9 @@ with open(supervisorConfYaml,'a') as stormSupervisor:
     stormSupervisor.write('supervisor.memory.capacity.mb: {}\n'.format(nodeMemory))
     stormSupervisor.write('supervisor.cpu.capacity: {}.0\n'.format(str(nodeCpus*100)))
 
-### Run netmonitor server ###
-
-netmoniorCommand = 'nohup python3 {}/server.py --init-db &'.format(netmonitorPath)
-netmonitorArgs = commandSplit(netmoniorCommand)
-netmonitorProcess = subprocess()
-
 ### Run ansible playbook ###
 
-ansibleCommand = environ.get('HOME') + '/.local/bin/ansible-playbook -i {} {} --extra-vars "nimbus_yaml={} supervisor_yaml={} netmonitor_path={} frontend_address={}"'.format(inventoryPath, playbookPath, nimbusConfYaml, supervisorConfYaml, netmonitorPath, frontendAddress)
+ansibleCommand = environ.get('HOME') + '/.local/bin/ansible-playbook -i {} {} --extra-vars "nimbus_yaml={} supervisor_yaml={}'.format(inventoryPath, playbookPath, nimbusConfYaml, supervisorConfYaml)
 
 print(ansibleCommand)
 ansibleArgs = commandSplit(ansibleCommand)
