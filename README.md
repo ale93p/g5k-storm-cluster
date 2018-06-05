@@ -41,8 +41,8 @@ That’s all. Simple, no?
 
 To connect to the Web UI, we need to open an ssh tunnel to the web service port:
 
-```
-# ssh {{ g5k.username }}@access.grid5000.fr -L8080:{{ nimbus_node_address }}:8080
+```shell
+localhost > ssh {{ g5k.username }}@access.grid5000.fr -L8080:{{ nimbus_node_address }}:8080
 
 ```
 
