@@ -1,7 +1,3 @@
-### to make subscription:
-### oarsub -t deploy -p "cluster='suno'" -I -l nodes=4,walltime=2 -k
-
-
 import subprocess
 from os import environ
 from sys import stdout, stderr
@@ -139,6 +135,3 @@ subprocess.run(stormApiArgs)
 ### Copy nimbus configurations locally ###
 
 copyfile(nimbusConfYaml, environ.get('HOME') + '/apache-storm-{}/conf/storm.yaml'.format(stormVersion)) # this will allow deploying topologies from g5k frontend
-
-### To connect to Web User Interface
-# ssh apagliari@access-south.grid5000.fr -L8080:{{ nimbus_node_address }}:8080
