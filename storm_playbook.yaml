@@ -1,21 +1,3 @@
-- hosts: all
-  become: yes
-  remote_user: root
-  gather_facts: no
-
-  tasks:
-
-  - name: 'Install Java 8'
-    apt:
-      name: openjdk-8-jdk 
-      update_cache: yes
-      # force_apt_get: yes
-
-  - name: 'Install Daemon'
-    apt: 
-      name: daemon 
-      # force_apt_get: yes
-
 - hosts: nimbus
   become: yes
   remote_user: root
