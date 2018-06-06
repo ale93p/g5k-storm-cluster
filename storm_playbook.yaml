@@ -16,11 +16,6 @@
       name: daemon 
       # force_apt_get: yes
 
-  - name: 'Install Git'
-    apt:
-      name: git-core
-  
-
 - hosts: nimbus
   become: yes
   remote_user: root
