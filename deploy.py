@@ -85,28 +85,30 @@ with open(inventoryPath, 'w') as inventoryFile:
 with open(nimbusConfYaml, 'w') as stormNimbus:
     stormNimbus.write('storm.zookeeper.servers:\n')
     stormNimbus.write('  - "{}"\n'.format(clusterNodes[0])) #TODO: multiple zookeeper servers
-    stormNimbus.write('storm.local.dir: "~/apache-storm-{}"\n'.format(stormVersion))
+    stormNimbus.write('storm.local.dir: "local-dir"\n')
     stormNimbus.write('nimbus.seeds: [')
     for i in range(0, nimbusNodes):
         if i > 0: stormNimbus.write(', ')
         stormNimbus.write('"{}"'.format(clusterNodes[i]))
     stormNimbus.write(']\n')
 
-copyfile(nimbusConfYaml,'storm_supervisor.yaml') # copy in another file to keep common values
-
-with open(nimbusConfYaml,'a') as stormNimbus:
-    stormNimbus.write('topology.worker.max.heap.size.mb: {}\n'.format(workerMaxHeapSize))
-    stormNimbus.write('worker.heap.memory.mb: {}\n'.format(workerHeapMemory))
     stormNimbus.write('storm.metrics.reporters:\n')
     stormNimbus.write('  - class: "org.apache.storm.metrics2.reporters.CsvStormReporter"\n')
     stormNimbus.write('    daemons:\n')
     stormNimbus.write('        - "worker"\n')
-    stormNimbus.write('    csv.log.dir: {}\n'.format(csvLogDir))
+    stormNimbus.write('    csv.log.dir: \"{}\"\n'.format(csvLogDir))
     stormNimbus.write('    report.period: 10\n')
     stormNimbus.write('    report.period.units: "SECONDS"\n')
     stormNimbus.write('    filter:\n')
     stormNimbus.write('       class: "org.apache.storm.metrics2.filters.RegexFilter"\n')
     stormNimbus.write('       expression: ".*emitted.*"\n')
+
+copyfile(nimbusConfYaml,'storm_supervisor.yaml') # copy in another file to keep common values
+
+with open(nimbusConfYaml,'a') as stormNimbus:
+    stormNimbus.write('topology.worker.max.heap.size.mb: {}\n'.format(workerMaxHeapSize))
+    stormNimbus.write('worker.heap.memory.mb: {}\n'.format(workerHeapMemory))
+
 
 with open(supervisorConfYaml,'a') as stormSupervisor:
     stormSupervisor.write('supervisor.slots.ports:\n')
