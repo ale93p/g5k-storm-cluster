@@ -117,7 +117,7 @@ with open(supervisorConfYaml,'a') as stormSupervisor:
 
 ### Run ansible playbook ###
 
-ansibleCommand = environ.get('HOME') + '/.local/bin/ansible-playbook -i {} {} --extra-vars "nimbus_yaml={} supervisor_yaml={}'.format(inventoryPath, playbookPath, nimbusConfYaml, supervisorConfYaml)
+ansibleCommand = environ.get('HOME') + '/.local/bin/ansible-playbook -i {} {} --extra-vars "nimbus_yaml={} supervisor_yaml={}"'.format(inventoryPath, playbookPath, nimbusConfYaml, supervisorConfYaml)
 
 print(ansibleCommand)
 ansibleArgs = commandSplit(ansibleCommand)
