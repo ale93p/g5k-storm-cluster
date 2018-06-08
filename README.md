@@ -11,7 +11,7 @@ This script will deploy a basic Apache Storm Cluster in our reserved nodes in Gr
 
 First of all we have to clone this repository in the frontend node in Grid’5000.
 
-Download the disk image from [here](http://i3s.unice.fr/~pagliari/downloads/g5k-storm-image), then move it inside the repository folder.
+Download the disk image and the env file from [here](http://i3s.unice.fr/~pagliari/downloads/g5k-storm-image), then move them inside the repository folder.
 
 ### Reserve resources ###
 
