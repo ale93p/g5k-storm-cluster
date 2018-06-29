@@ -23,6 +23,7 @@ zookeperVersion = str(stormConfig['zookeeper.version'])
 stormVersion = str(stormConfig['storm.version'])
 nimbusNodes = int(stormConfig['nimbus.nodes'])
 csvLogDir = str(stormConfig['csv.log.dir'])
+csvFilterExpression = str(stormConfig['csv.filter.expression'])
 workerPerNode = int(stormConfig['workers.per.node'])
 workerFirstSlot = int(stormConfig['workers.starting.slot'])
 workerMaxHeapSize = str(stormConfig['worker.max.heap.size.mb'])
@@ -101,7 +102,7 @@ with open(nimbusConfYaml, 'w') as stormNimbus:
     stormNimbus.write('    report.period.units: "SECONDS"\n')
     stormNimbus.write('    filter:\n')
     stormNimbus.write('       class: "org.apache.storm.metrics2.filters.RegexFilter"\n')
-    stormNimbus.write('       expression: ".*emitted.*"\n')
+    stormNimbus.write('       expression: "{}}"\n'.format(csvFilterExpression))
 
 copyfile(nimbusConfYaml,'storm_supervisor.yaml') # copy in another file to keep common values
 
