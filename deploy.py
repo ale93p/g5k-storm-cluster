@@ -28,6 +28,7 @@ workerPerNode = int(stormConfig['workers.per.node'])
 workerFirstSlot = int(stormConfig['workers.starting.slot'])
 workerMaxHeapSize = str(stormConfig['worker.max.heap.size.mb'])
 workerHeapMemory = str(stormConfig['worker.heap.memory.mb'])
+stormScheduler = str(stormConfig['storm.scheduler'])
 
 ansibleConfig = config['ansible']
 inventoryPath = str(ansibleConfig['inventory.file.path'])
@@ -102,11 +103,12 @@ with open(nimbusConfYaml, 'w') as stormNimbus:
     stormNimbus.write('    report.period.units: "SECONDS"\n')
     stormNimbus.write('    filter:\n')
     stormNimbus.write('       class: "org.apache.storm.metrics2.filters.RegexFilter"\n')
-    stormNimbus.write('       expression: "{}}"\n'.format(csvFilterExpression))
+    stormNimbus.write('       expression: "{}"\n'.format(csvFilterExpression))
 
 copyfile(nimbusConfYaml,'storm_supervisor.yaml') # copy in another file to keep common values
 
 with open(nimbusConfYaml,'a') as stormNimbus:
+    stormNimbus.write('storm.scheduler: "{}"\n'.format(stormScheduler))
     stormNimbus.write('topology.worker.max.heap.size.mb: {}\n'.format(workerMaxHeapSize))
     stormNimbus.write('worker.heap.memory.mb: {}\n'.format(workerHeapMemory))
 
