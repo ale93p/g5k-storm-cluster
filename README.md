@@ -7,6 +7,12 @@ This script will deploy a basic Apache Storm Cluster in our reserved nodes in Gr
 * Python 3.x
 * Ansible (tested with version 2.5)
 
+To install ansible from the frontend:
+```shell
+export PATH=$HOME/.local/bin:$PATH
+easy_install --user ansible netaddr
+```
+
 ## How to run it ##
 
 First of all we have to clone this repository in the frontend node in Grid’5000.
@@ -23,14 +29,27 @@ In this example we are in the Sophia region, we’re requesting _4_ nodes for _2
 
 For further and more specific information follow the Grid’5000’s [Getting Started tutorial](https://www.grid5000.fr/mediawiki/index.php/Getting_Started).
 
-### Pre-task: customize the config file ###
+### Pre-tasks ###
+
+#### Prepare the config file ####
 
 Open the file `cluster.conf` and modify the parameters to comply your system configuration (g5k, storm and folders).
+Be sure to change the username with your grid5000 username, and to specify the correct grid5000 image name.
+
+#### Install Storm in your frontend ####
+
+Download ad extract a binary of storm in your frontend home.
+It will be needed to copy the configuration for your cluster, so you will be able to submit topologies directly from the frontend.
 
 ### Run it ###
 
 ```shell
 frontend > python3 deploy.py
+```
+
+To access your nodes use:
+```shell
+ssh root@node-name
 ```
 
 That’s all. Simple, no?
