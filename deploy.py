@@ -38,7 +38,7 @@ playbookPath = str(ansibleConfig['playbook.file.path'])
 
 nimbusConfYaml = 'storm_nimbus.yaml'
 supervisorConfYaml = 'storm_supervisor.yaml'
-
+workerLog4jFile = 'worker.xml'
 ### Obtain cluster's nodes list ###
 
 oarFile = ""
@@ -73,6 +73,7 @@ with open(inventoryPath, 'w') as inventoryFile:
     inventoryFile.write('zookeeper_conf_dir="~/zookeeper-{}/conf/"\n'.format(zookeperVersion))
     inventoryFile.write('storm_bin_dir="~/apache-storm-{}/bin/"\n'.format(stormVersion))
     inventoryFile.write('storm_conf_dir="~/apache-storm-{}/conf/"\n'.format(stormVersion))
+    inventoryFile.write('storm_log4j_dir="~/apache-storm-{}/log4j2/"\n'.format(stormVersion))
     inventoryFile.write('\n')
     inventoryFile.write('[nimbus]\n')
     for i in range(0, nimbusNodes):
@@ -140,3 +141,8 @@ subprocess.run(stormApiArgs)
 ### Copy nimbus configurations locally ###
 
 copyfile(nimbusConfYaml, environ.get('HOME') + '/apache-storm-{}/conf/storm.yaml'.format(stormVersion)) # this will allow deploying topologies from g5k frontend
+
+### Print ssh tunnel to run on host
+
+print("**** ssh tunnel ***")
+print("ssh access.grid5000.fr -L8080:"+clusterNodes[0] + ":8080")
