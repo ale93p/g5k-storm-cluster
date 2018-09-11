@@ -35,6 +35,7 @@ For further and more specific information follow the Grid’5000’s [Getting St
 
 Open the file `cluster.conf` and modify the parameters to comply your system configuration (g5k, storm and folders).
 Be sure to change the username with your grid5000 username, and to specify the correct grid5000 image name.
+(check also other possible configurations that I may have changed during testing)
 
 #### Install Storm in your frontend ####
 
@@ -66,3 +67,19 @@ localhost > ssh {{ g5k.username }}@access.grid5000.fr -L8080:{{ nimbus_node_addr
 ```
 
 Now the Web Server should be reached through `localhost:8080`
+
+## Multi-Cluster Run ##
+
+The script is able to deploy storm also in a multi-cluster environment. To make the reservation use:
+
+```shell
+frontend > oargridsub -t deploy -w '0:59:00' suno:rdef="/nodes=6",parapide:rdef="/nodes=6"
+```
+
+In this case, we don't enter in the job shell, so we don't have the `OAR_NODE_FILE` systemvariable. We can retrieve the list of the reserved machines using:
+
+```shell
+frontend > oargridstat -w -l {{ GRID_RESERVATION_ID  }} | sed '/^$/d' > ~/machines
+```
+
+Finally, change the configuration file specifying the location of the file just created (`oar.file.location=~/machines`) and write "yes" in the multi cluster option (`multi.cluster=yes`).
