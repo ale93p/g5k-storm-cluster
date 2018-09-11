@@ -83,3 +83,5 @@ frontend > oargridstat -w -l {{ GRID_RESERVATION_ID  }} | sed '/^$/d' > ~/machin
 ```
 
 Finally, change the configuration file specifying the location of the file just created (`oar.file.location=~/machines`) and write "yes" in the multi cluster option (`multi.cluster=yes`).
+
+For more informations visit the Grid'5000's [Multi-site jobs](https://www.grid5000.fr/mediawiki/index.php/Advanced_OAR#Multi-site_jobs_with_OARGrid) tutorial.
