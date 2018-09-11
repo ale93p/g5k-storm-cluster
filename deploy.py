@@ -17,6 +17,7 @@ deployImg = str(g5kConfig['deploy.image.name'])
 nodeMemory = str(g5kConfig['node.memory.mb'])
 nodeCpus = int(g5kConfig['node.cpu.units'])
 userName = str(g5kConfig['user.name'])
+oarFile = str(g5kConfig['oar.file.location'])
 
 stormConfig = config['storm']
 zookeperVersion = str(stormConfig['zookeeper.version'])
@@ -40,14 +41,17 @@ nimbusConfYaml = 'storm_nimbus.yaml'
 supervisorConfYaml = 'storm_supervisor.yaml'
 workerLog4jFile = 'worker.xml'
 ### Obtain cluster's nodes list ###
+print("OARFILE:",oarFile)
+if oarFile == 'default':
+    try:
+        oarFile = environ.get('OAR_NODE_FILE')
+    except KeyError:
+        print("ERROR: nodefile not found")
+        exit()
+else:
+    oarFile = oarFile.replace('~', environ.get('HOME'))
 
-oarFile = ""
-try:
-    oarFile = environ.get('OAR_NODE_FILE')
-except KeyError:
-    print("ERROR: nodefile not found")
-    exit()
-
+print("OARFILE:",oarFile)
 with open(oarFile) as file:
     clusterNodes = [line.strip() for line in file]
 
@@ -143,6 +147,7 @@ subprocess.run(stormApiArgs)
 copyfile(nimbusConfYaml, environ.get('HOME') + '/apache-storm-{}/conf/storm.yaml'.format(stormVersion)) # this will allow deploying topologies from g5k frontend
 
 ### Print ssh tunnel to run on host
-
+print()
+print()
 print("**** ssh tunnel ***")
-print("ssh access.grid5000.fr -L8080:"+clusterNodes[0] + ":8080")
+print("ssh {}@access.grid5000.fr -L8080:{}:8080".format(userName ,clusterNodes[0]))
