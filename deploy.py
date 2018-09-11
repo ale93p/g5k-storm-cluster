@@ -18,6 +18,7 @@ nodeMemory = str(g5kConfig['node.memory.mb'])
 nodeCpus = int(g5kConfig['node.cpu.units'])
 userName = str(g5kConfig['user.name'])
 oarFile = str(g5kConfig['oar.file.location'])
+multiCluster = str(g5kConfig['multi.cluster']) in "yes"
 
 stormConfig = config['storm']
 zookeperVersion = str(stormConfig['zookeeper.version'])
@@ -63,7 +64,10 @@ print("Your cluster is composed by {} nodes: {}".format(nodesNbr, clusterNodes))
 
 ### Deploy image through kadeploy in g5k ###
 
+
 kadeployCommad = 'kadeploy3 -f {} -a {}.env -k'.format(oarFile, deployImg)
+if multiCluster:
+    kadeployCommad = kadeployCommad + " --multi-server"
 print(kadeployCommad)
 kadeployArgs = commandSplit(kadeployCommad)
 kadeployProcess = subprocess.Popen(kadeployArgs, stderr=stderr, stdout=stdout)
