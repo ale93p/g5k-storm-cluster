@@ -31,6 +31,8 @@ workerFirstSlot = int(stormConfig['workers.starting.slot'])
 workerMaxHeapSize = str(stormConfig['worker.max.heap.size.mb'])
 workerHeapMemory = str(stormConfig['worker.heap.memory.mb'])
 stormScheduler = str(stormConfig['storm.scheduler'])
+stormSchedulerStrategy = str(stormConfig['topology.scheduler.strategy'])
+topographyPlugin = str(stormConfig['storm.network.topography.plugin'])
 
 ansibleConfig = config['ansible']
 inventoryPath = str(ansibleConfig['inventory.file.path'])
@@ -81,6 +83,11 @@ with open(inventoryPath, 'w') as inventoryFile:
     inventoryFile.write('zookeeper_conf_dir="~/zookeeper-{}/conf/"\n'.format(zookeperVersion))
     inventoryFile.write('storm_bin_dir="~/apache-storm-{}/bin/"\n'.format(stormVersion))
     inventoryFile.write('storm_conf_dir="~/apache-storm-{}/conf/"\n'.format(stormVersion))
+
+    ### ADDED STORM LIB DIR ###
+    inventoryFile.write('storm_lib_dir="~/apache-storm-{}/lib/"\n'.format(stormVersion))
+    ###
+
     inventoryFile.write('storm_log4j_dir="~/apache-storm-{}/log4j2/"\n'.format(stormVersion))
     inventoryFile.write('\n')
     inventoryFile.write('[nimbus]\n')
@@ -103,10 +110,19 @@ with open(nimbusConfYaml, 'w') as stormNimbus:
         stormNimbus.write('"{}"'.format(clusterNodes[i]))
     stormNimbus.write(']\n')
 
+
+    ### ADDED CUSTOM TOPOGRAPHY PLUGIN ###
+    stormNimbus.write('storm.network.topography.plugin: {}\n'.format(topographyPlugin))
+
+    stormNimbus.write('topology.component.cpu.pcore.percent: 0\n')
+    stormNimbus.write('topology.component.resources.onheap.memory.mb: 0\n')
+
     stormNimbus.write('storm.metrics.reporters:\n')
     stormNimbus.write('  - class: "org.apache.storm.metrics2.reporters.CsvStormReporter"\n')
     stormNimbus.write('    daemons:\n')
     stormNimbus.write('        - "worker"\n')
+    # stormNimbus.write('        - "nimbus"\n')
+    # stormNimbus.write('        - "supervisor"\n')
     stormNimbus.write('    csv.log.dir: \"{}\"\n'.format(csvLogDir))
     stormNimbus.write('    report.period: 10\n')
     stormNimbus.write('    report.period.units: "SECONDS"\n')
@@ -116,8 +132,10 @@ with open(nimbusConfYaml, 'w') as stormNimbus:
 
 copyfile(nimbusConfYaml,'storm_supervisor.yaml') # copy in another file to keep common values
 
+
 with open(nimbusConfYaml,'a') as stormNimbus:
     stormNimbus.write('storm.scheduler: "{}"\n'.format(stormScheduler))
+    stormNimbus.write('topology.scheduler.strategy: "{}"\n'.format(stormSchedulerStrategy))
     stormNimbus.write('topology.worker.max.heap.size.mb: {}\n'.format(workerMaxHeapSize))
     stormNimbus.write('worker.heap.memory.mb: {}\n'.format(workerHeapMemory))
 
@@ -149,6 +167,11 @@ subprocess.run(stormApiArgs)
 ### Copy nimbus configurations locally ###
 
 copyfile(nimbusConfYaml, environ.get('HOME') + '/apache-storm-{}/conf/storm.yaml'.format(stormVersion)) # this will allow deploying topologies from g5k frontend
+
+### COPY CUSTOM TOPOGRAPHY PLUGIN TO LOCALHOST ###
+copyfile(environ.get('HOME') + '/grid5000networkdiscovery/target/original-grid5000networkdiscovery-1.0-SNAPSHOT.jar', environ.get('HOME') + '/apache-storm-{}/lib/original-grid5000networkdiscovery-1.0-SNAPSHOT.jar'.format(stormVersion))
+copyfile(environ.get('HOME') + '/AckAwareRAS/target/scheduling-1.0-SNAPSHOT.jar', environ.get('HOME') + '/apache-storm-{}/lib/scheduling-1.0-SNAPSHOT.jar'.format(stormVersion))
+
 
 ### Print ssh tunnel to run on host
 print()

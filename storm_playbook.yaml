@@ -13,6 +13,22 @@
         # group: users
         mode: 0644 
     
+    - name: 'COPY STORM CUSTOM TOPOGRAPHY PLUGIN'
+      copy:
+        src: "/home/apagliari/grid5000networkdiscovery/target/original-grid5000networkdiscovery-1.0-SNAPSHOT.jar"
+        dest: "{{ storm_lib_dir }}/"
+        # owner: "{{ user }}"
+        # group: users
+        mode: 0644
+
+    - name: 'COPY STORM ACK AWARE STRATEGY'
+      copy:
+        src: "/home/apagliari/AckAwareRAS/target/scheduling-1.0-SNAPSHOT.jar"
+        dest: "{{ storm_lib_dir }}/"
+        # owner: "{{ user }}"
+        # group: users
+        mode: 0644 
+    
     - name: 'creating zookeeper configuration file'
       copy:
         src: "{{ zookeeper_conf_dir }}/zoo_sample.cfg"
@@ -40,6 +56,16 @@
 
   tasks:
 
+    - name: 'copy ntp configuration'
+      copy:
+        src: /home/apagliari/ntp.conf
+        dest: /etc/ntp.conf
+
+    - name: 'install ntp'
+      apt:
+        name: ntp
+        update_cache: yes
+
     - name: 'copy storm supervisor configuratiion file'
       copy:
         src: "./{{ supervisor_yaml }}"
@@ -47,6 +73,14 @@
         # owner: "{{ user }}"
         # group: users
         mode: 0644
+      
+    - name: 'COPY STORM CUSTOM TOPOGRAPHY PLUGIN'
+      copy:
+        src: "/home/apagliari/grid5000networkdiscovery/target/original-grid5000networkdiscovery-1.0-SNAPSHOT.jar"
+        dest: "{{ storm_lib_dir }}/"
+        # owner: "{{ user }}"
+        # group: users
+        mode: 0644 
 
     - name: 'starting supervisor'
       shell: "daemon {{ storm_bin_dir }}/storm supervisor"
