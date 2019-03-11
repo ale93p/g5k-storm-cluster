@@ -17,13 +17,13 @@ easy_install --user ansible netaddr
 
 First of all we have to clone this repository in the frontend node in Grid’5000.
 
-> **Download the disk image and the env file from [here](http://i3s.unice.fr/~pagliari/downloads/g5k-storm-image), then move them inside the repository folder.**
+> **Download the disk image and the env file from [here](http://i3s.unice.fr/~pagliari/downloads/g5k-images/#storm), then move them inside the repository folder.**
 
 ### Reserve resources ###
 
 To reserve nodes in Grid’5000 you just have to run the following command (adapted to your situation):
 ```shell
-frontend > oarsub -t deploy -p "cluster='suno'" -I -l nodes=4,walltime=2 -k
+frontend > oarsub -t deploy -p "cluster='suno'" -I -l nodes=4,walltime=2
 ```
 In this example we are in the Sophia region, we’re requesting _4_ nodes for _2_ hours in the cluster named _”suno”_.
 
