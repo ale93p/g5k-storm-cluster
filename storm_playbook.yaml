@@ -56,17 +56,17 @@
 
   tasks:
 
-    - name: 'copy ntp configuration'
-      copy:
-        src: /home/apagliari/ntp.conf
-        dest: /etc/ntp.conf
+    # - name: 'copy ntp configuration'
+    #   copy:
+    #     src: /home/apagliari/ntp.conf
+    #     dest: /etc/ntp.conf
 
-    - name: 'install ntp'
-      apt:
-        name: ntp
-        update_cache: yes
+    # - name: 'install ntp'
+    #   apt:
+    #     name: ntp
+    #     update_cache: yes
 
-    - name: 'copy storm supervisor configuratiion file'
+    - name: 'copy storm supervisor configuration file'
       copy:
         src: "./{{ supervisor_yaml }}"
         dest: "{{ storm_conf_dir }}/storm.yaml"
