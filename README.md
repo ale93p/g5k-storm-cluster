@@ -39,8 +39,10 @@ Be sure to change the username with your grid5000 username, and to specify the c
 
 #### Install Storm in your frontend ####
 
-Download ad extract a binary of storm in your frontend home.
+Download a binary of Storm ([link to download page for Apache Storm 1.2.1](https://www.apache.org/dyn/closer.lua/storm/apache-storm-1.2.1/apache-storm-1.2.1.tar.gz)) and extract it directly in your frontend home.
 It will be needed to copy the configuration for your cluster, so you will be able to submit topologies directly from the frontend.
+
+It should result in something like ```/home/{{username}}/apache-storm-1.2.1```.
 
 ### Run it ###
 
@@ -62,7 +64,7 @@ That’s all. Simple, no?
 To connect to the Web UI, we need to open an ssh tunnel to the web service port:
 
 ```shell
-localhost > ssh {{ g5k.username }}@access.grid5000.fr -L8080:{{ nimbus_node_address }}:8080
+localhost > ssh {{ g5k.username }}@access.grid5000.fr -N -L8080:{{ nimbus_node_address }}:8080
 
 ```
 
