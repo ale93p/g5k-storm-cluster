@@ -154,4 +154,4 @@ copyfile(nimbusConfYaml, environ.get('HOME') + '/apache-storm-{}/conf/storm.yaml
 print()
 print()
 print("**** ssh tunnel ***")
-print("ssh {}@access.grid5000.fr -L8080:{}:8080".format(userName ,clusterNodes[0]))
+print("ssh {}@access.grid5000.fr -N -L8080:{}:8080".format(userName ,clusterNodes[0]))
